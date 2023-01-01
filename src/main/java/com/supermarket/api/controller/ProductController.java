@@ -1,5 +1,6 @@
 package com.supermarket.api.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +40,19 @@ public class ProductController {
 	StorageService storageService;
 
 	@PostMapping(value = "/myUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String myUpload(@RequestParam MultipartFile file) {
+	public String myUpload(@RequestParam MultipartFile file) throws IOException {
 		return storageService.uploadImage(file, file.getOriginalFilename());
 	}
 
 	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String createProduct(@RequestParam String proName, @RequestParam MultipartFile file,
 			@RequestParam Long price, @RequestParam Integer quantity, @RequestParam Long categoryId) throws Exception {
-
-		System.out.println(proName);
-		System.out.println(price);
-		System.out.println(quantity);
-		System.out.println(categoryId);
-		System.out.println(file);
-
 		// upload image to server
 		String img = storageService.uploadImage(file, proName + ".png");
+
+		if (img == null) {
+			return "failed";
+		}
 
 		Product productNew = new Product();
 
@@ -96,7 +94,7 @@ public class ProductController {
 	}
 
 	@PutMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String updateProduct(@RequestBody UpdateProductForm updateProductForm) {
+	public String updateProduct(@RequestBody UpdateProductForm updateProductForm) throws IOException {
 
 		Product productUpdate = productDAO.findById(updateProductForm.getId()).orElse(null);
 

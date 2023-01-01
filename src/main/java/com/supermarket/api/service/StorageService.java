@@ -2,6 +2,7 @@ package com.supermarket.api.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -21,18 +22,23 @@ public class StorageService {
 	@Autowired
 	Environment environment;
 
-	public String uploadImage(MultipartFile file, String fileName) {
+	public String uploadImage(MultipartFile file, String fileName) throws IOException {
 		try {
-			String UPLOAD_PATH = Path.of(Objects.requireNonNull(environment.getProperty("app.file.storage.mapping")))
-					.toAbsolutePath().toString();
+			Path UPLOAD_PATH = Paths.get("./target/classes/public").toAbsolutePath().normalize();
+
+			if (!Files.exists(UPLOAD_PATH)) {
+				Files.createDirectories(UPLOAD_PATH);
+			}
 
 			Path destination = Paths.get(UPLOAD_PATH + "/" + fileName);
+
+			System.out.println(destination.toAbsolutePath());
 
 			Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
 			return Constant.SERVER_PUBLIC_FOLDER_LINK + fileName;
 		} catch (Exception e) {
-			System.out.println("Error while uploading product. Please try again !!");
+			e.printStackTrace();
 			return null;
 		}
 	}
