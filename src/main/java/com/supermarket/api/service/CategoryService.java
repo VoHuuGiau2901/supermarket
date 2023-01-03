@@ -41,7 +41,7 @@ public class CategoryService {
 
 		categoryDAO.save(categoryNew);
 
-		return "category Created";
+		return "category created";
 	}
 
 	public String UpdateCategory(UpdateCategoryForm updateCategoryForm) {
@@ -54,7 +54,7 @@ public class CategoryService {
 
 		categoryDAO.save(categoryUpdate);
 
-		return "category Created";
+		return "category Updated";
 	}
 
 	public List<Category> getAllCategory() {
@@ -66,6 +66,6 @@ public class CategoryService {
 
 		categoryDAO.deleteById(categoryDelete.getId());
 
-		return "product Deleted";
+		return "category deleted";
 	}
 }

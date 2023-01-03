@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.supermarket.api.dao.UserDAO;
 import com.supermarket.api.entity.User;
+import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.LoginForm;
@@ -26,13 +27,13 @@ public class UserService {
 	public String authenticateUser(LoginForm loginForm) {
 		User user = userDAO.findByEmail(loginForm.getEmail());
 		if (user == null) {
-			throw new NotFoundException("Email " + loginForm.getEmail() + " not found");
+			throw new AuthenticateException("Email " + loginForm.getEmail() + " is invalid");
 		}
 		boolean valid = passwordEncoder.matches(loginForm.getPassword(), user.getPassword());
 		if (valid) {
-			return "Login Success";
+			return "login success";
 		} else {
-			return "Login Failed, Wrong password";
+			throw new AuthenticateException("password is not match for " + loginForm.getEmail());
 		}
 	}
 
@@ -67,7 +68,7 @@ public class UserService {
 
 		userDAO.save(regUser);
 
-		return "SignUp successfully";
+		return "signUp successfully";
 	}
 
 	public List<User> getAllUser() {

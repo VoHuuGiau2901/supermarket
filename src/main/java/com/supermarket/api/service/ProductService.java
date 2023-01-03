@@ -38,7 +38,7 @@ public class ProductService {
 
 		productDAO.save(productNew);
 
-		return "Product Created";
+		return "product created";
 	}
 
 	public String UpdateProduct(Product productUpdate, String proName, Long price, Integer quantity, Integer status) {
@@ -51,7 +51,7 @@ public class ProductService {
 
 		productDAO.save(productUpdate);
 
-		return "Product Updated";
+		return "product updated";
 	}
 
 	public String UploadImgProduct(MultipartFile file, String proName) {
@@ -84,6 +84,6 @@ public class ProductService {
 		storageService.deleteImage(productDelete.getImg());
 		productDAO.deleteById(productDelete.getId());
 
-		return "product Deleted";
+		return "product deleted";
 	}
 }
