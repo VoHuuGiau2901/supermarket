@@ -11,7 +11,6 @@ import com.supermarket.api.dao.UserDAO;
 import com.supermarket.api.entity.User;
 import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
-import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.SignUpForm;
 import com.supermarket.api.service.GlobalService.Constant;
