@@ -1,15 +1,11 @@
-package com.supermarket.api.service;
+package com.supermarket.api.service.GlobalService;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -22,13 +18,15 @@ public class StorageService {
 	@Autowired
 	Environment environment;
 
-	public String uploadImage(MultipartFile file, String fileName) throws IOException {
+	public String uploadImage(MultipartFile file, String proName) {
 		try {
-			Path UPLOAD_PATH = Paths.get("./target/classes/public").toAbsolutePath().normalize();
+			Path UPLOAD_PATH = Paths.get("./public/").normalize();
 
 			if (!Files.exists(UPLOAD_PATH)) {
 				Files.createDirectories(UPLOAD_PATH);
 			}
+
+			String fileName = proName + ".png";
 
 			Path destination = Paths.get(UPLOAD_PATH + "/" + fileName);
 
@@ -43,16 +41,17 @@ public class StorageService {
 		}
 	}
 
-	public static void deleteImage(String imgLink) {
+	public void deleteImage(String imgLink) {
 		Runnable deleteTask = () -> {
-			String UPLOAD_PATH = Paths.get(new ClassPathResource("/target/classes/public").getPath()).normalize()
-					.toString();
+			String UPLOAD_PATH = Paths.get("./public/").normalize().toString();
 
 			String[] linkIndfo = imgLink.split("/");
 
 			String fileName = linkIndfo[linkIndfo.length - 1];
 
-			File myObj = new File(UPLOAD_PATH + fileName);
+			String destination = UPLOAD_PATH + "/" + fileName;
+
+			File myObj = new File(destination);
 			myObj.delete();
 			return;
 		};

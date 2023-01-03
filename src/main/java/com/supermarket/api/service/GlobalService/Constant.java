@@ -1,4 +1,4 @@
-package com.supermarket.api.service;
+package com.supermarket.api.service.GlobalService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

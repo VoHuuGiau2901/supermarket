@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.supermarket.api.service.Constant;
+import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
 @Table(name = Constant.TABLE_PREFIX + "user")

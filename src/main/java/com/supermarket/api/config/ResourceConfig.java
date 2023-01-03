@@ -1,9 +1,10 @@
 package com.supermarket.api.config;
 
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -20,7 +21,9 @@ public class ResourceConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/public/**").addResourceLocations(new ClassPathResource("/public/"));
+		String location = "file:///" + Paths.get("./public/").normalize().toAbsolutePath().toString().replace("\\", "/")
+				+ "/";
+		registry.addResourceHandler("/public/**").addResourceLocations(location);
 	}
 
 }

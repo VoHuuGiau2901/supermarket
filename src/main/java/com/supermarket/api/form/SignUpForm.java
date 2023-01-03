@@ -1,7 +1,5 @@
 package com.supermarket.api.form;
 
-import java.util.Date;
-
 public class SignUpForm {
 	private String fullname;
 

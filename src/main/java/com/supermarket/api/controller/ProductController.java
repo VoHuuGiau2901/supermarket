@@ -7,143 +7,80 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.supermarket.api.dao.CategoryDAO;
-import com.supermarket.api.dao.ProductDAO;
 import com.supermarket.api.entity.Category;
 import com.supermarket.api.entity.Product;
-import com.supermarket.api.form.product.CreateProductForm;
-import com.supermarket.api.form.product.UpdateProductForm;
-import com.supermarket.api.service.Constant;
-import com.supermarket.api.service.StorageService;
+import com.supermarket.api.service.CategoryService;
+import com.supermarket.api.service.ProductService;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
-	ProductDAO productDAO;
+	ProductService productService;
 
 	@Autowired
-	CategoryDAO categoryDAO;
-
-	@Autowired
-	StorageService storageService;
-
-	@PostMapping(value = "/myUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String myUpload(@RequestParam MultipartFile file) throws IOException {
-		return storageService.uploadImage(file, file.getOriginalFilename());
-	}
+	CategoryService categoryService;
 
 	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String createProduct(@RequestParam String proName, @RequestParam MultipartFile file,
-			@RequestParam Long price, @RequestParam Integer quantity, @RequestParam Long categoryId) throws Exception {
+	public String create(@RequestParam String proName, @RequestParam MultipartFile file, @RequestParam Long price,
+			@RequestParam Integer quantity, @RequestParam Long categoryId) throws Exception {
+
 		// upload image to server
-		String img = storageService.uploadImage(file, proName + ".png");
+		String imgUrlString = productService.UploadImgProduct(file, proName);
 
-		if (img == null) {
-			return "failed";
-		}
+		// find category
+		Category category = categoryService.findCategory(categoryId);
 
-		Product productNew = new Product();
-
-		productNew.setName(proName);
-		productNew.setImg(img);
-		productNew.setPrice(price);
-		productNew.setQuantity(quantity);
-
-		productNew.setCreatedDate(Constant.getCurrentDateTime());
-		productNew.setModifiedDate(null);
-		productNew.setStatus(Constant.ACTIVE_STATUS);
-
-		Category category = categoryDAO.findById(categoryId).orElse(null);
-
-		if (category == null) {
-			return "category not found";
-		}
-
-		productNew.setCategory(category);
-
-		productDAO.save(productNew);
-
-		return "Product Created";
+		return productService.CreateProduct(proName, imgUrlString, price, quantity, category);
 	}
 
 	@GetMapping("/list")
 	public List<Product> getAll() {
-		return productDAO.findAll();
+		return productService.findAll();
 	}
 
-	@GetMapping("/byId")
-	public Product getById(@PathVariable(value = "proId") Long proId) {
-		return productDAO.findById(proId).orElse(null);
+	@GetMapping("/byId/{id}")
+	public Product get(@PathVariable(value = "id") Long id) {
+		return productService.findProduct(id);
 	}
 
-	@GetMapping("/bycatId")
-	public List<Product> getAllByCatId(@PathVariable(value = "categoryId") Long categoryId) {
-		return productDAO.findByCategoryId(categoryId);
+	@GetMapping("/bycatId/{id}")
+	public List<Product> getAllByCatId(@PathVariable(value = "id") Long id) {
+		return productService.findProductByCategoryId(id);
 	}
 
-	@PutMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String updateProduct(@RequestBody UpdateProductForm updateProductForm) throws IOException {
+	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String update(@RequestParam String proName, @RequestParam MultipartFile file, @RequestParam Long price,
+			@RequestParam Integer quantity, @RequestParam Long categoryId, @RequestParam Long proId,
+			@RequestParam Integer status) throws IOException {
 
-		Product productUpdate = productDAO.findById(updateProductForm.getId()).orElse(null);
+		Product productUpdate = productService.findProduct(proId);
 
-		if (productUpdate == null) {
-			return "product not found";
-		}
-
-		productUpdate.setName(updateProductForm.getProName());
-
-		if (updateProductForm.getFile() != null) {
-			StorageService.deleteImage(productUpdate.getImg());
-			String img = storageService.uploadImage(updateProductForm.getFile(), productUpdate.getName());
+		if (file != null) {
+			productService.deleteProductImg(productUpdate.getImg());
+			String img = productService.UploadImgProduct(file, productUpdate.getName());
 			productUpdate.setImg(img);
 		}
 
-		productUpdate.setPrice(updateProductForm.getPrice());
-
-		productUpdate.setQuantity(updateProductForm.getQuantity());
-
-		productUpdate.setModifiedDate(Constant.getCurrentDateTime());
-
-		if (updateProductForm.getCategoryId() > 0) {
-			Category category = categoryDAO.findById(updateProductForm.getCategoryId()).orElse(null);
-			if (category == null) {
-				return "invalid category";
-			}
+		if (categoryId > 0) {
+			Category category = categoryService.findCategory(categoryId);
 			productUpdate.setCategory(category);
 		}
 
-		productUpdate.setStatus(updateProductForm.getStatus());
-
-		productDAO.save(productUpdate);
-
-		return "Product Updated";
+		return productService.UpdateProduct(productUpdate, proName, price, quantity, status);
 	}
 
-	@DeleteMapping("/delete")
-	public String deleteProduct(@PathVariable(value = "proId") Long proId) {
-
-		Product productDelete = productDAO.findById(proId).orElse(null);
-
-		if (productDelete == null) {
-			return "product not found";
-		}
-
-		StorageService.deleteImage(productDelete.getImg());
-
-		productDAO.deleteById(productDelete.getId());
-
-		return "product Deleted";
+	@DeleteMapping("/delete/{id}")
+	public String delete(@PathVariable(value = "proId") Long id) {
+		return productService.deleteProductById(id);
 	}
 }

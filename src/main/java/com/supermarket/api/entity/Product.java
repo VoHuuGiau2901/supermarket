@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.supermarket.api.service.Constant;
+import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
 @Table(name = Constant.TABLE_PREFIX + "product")

@@ -15,7 +15,7 @@ import com.supermarket.api.dao.UserDAO;
 import com.supermarket.api.entity.User;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.SignUpForm;
-import com.supermarket.api.service.Constant;
+import com.supermarket.api.service.GlobalService.Constant;
 
 @RestController
 @RequestMapping("/user")
