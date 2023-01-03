@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.supermarket.api.dao.RoleDAO;
 import com.supermarket.api.dao.UserDAO;
+import com.supermarket.api.entity.Role;
 import com.supermarket.api.entity.User;
 import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
@@ -19,6 +21,9 @@ import com.supermarket.api.service.GlobalService.Constant;
 public class UserService {
 	@Autowired
 	UserDAO userDAO;
+
+	@Autowired
+	RoleDAO roleDAO;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -53,6 +58,10 @@ public class UserService {
 		this.checkDuplicate(signUpForm);
 
 		User regUser = new User();
+
+		Role roleUser = roleDAO.findFirstByName("USER");
+
+		regUser.setRole(roleUser);
 
 		regUser.setFullname(signUpForm.getFullname());
 		regUser.setPassword(passwordEncoder.encode(signUpForm.getPassword()));

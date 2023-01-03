@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
@@ -38,6 +40,10 @@ public class User extends EntityBase {
 
 	@Column(name = "phone")
 	private String phone;
+
+	@ManyToOne
+	@JsonIgnoreProperties({ "users" })
+	private Role role;
 
 	public User() {
 		super();
@@ -109,5 +115,13 @@ public class User extends EntityBase {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }
