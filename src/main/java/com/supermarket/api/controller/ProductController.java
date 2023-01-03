@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,9 +60,14 @@ public class ProductController {
 	}
 
 	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String update(@RequestParam String proName, @RequestParam MultipartFile file, @RequestParam Long price,
-			@RequestParam Integer quantity, @RequestParam Long categoryId, @RequestParam Long proId,
-			@RequestParam Integer status) throws IOException {
+	public String update(
+			@Nullable @RequestParam String proName,
+			@Nullable @RequestParam MultipartFile file,
+			@Nullable @RequestParam Long price,
+			@Nullable @RequestParam Integer quantity,
+			@Nullable @RequestParam Long categoryId, 
+			@Nullable @RequestParam Integer status,
+			@RequestParam Long proId) throws IOException {
 
 		Product productUpdate = productService.findProduct(proId);
 
@@ -71,7 +77,7 @@ public class ProductController {
 			productUpdate.setImg(img);
 		}
 
-		if (categoryId > 0) {
+		if (categoryId != null) {
 			Category category = categoryService.findCategory(categoryId);
 			productUpdate.setCategory(category);
 		}
