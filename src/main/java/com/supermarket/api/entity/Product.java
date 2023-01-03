@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
@@ -37,10 +37,10 @@ public class Product extends EntityBase {
 	@Column(name = "quantity")
 	private Integer quantity;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties({ "products" })
 	private Category category;
 
 	public Long getId() {

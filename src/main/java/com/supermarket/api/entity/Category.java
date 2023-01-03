@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
@@ -28,8 +28,8 @@ public class Category extends EntityBase {
 	@Column(name = "name")
 	private String name;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties({ "category" })
 	List<Product> products = new ArrayList<>();
 
 	public Long getId() {

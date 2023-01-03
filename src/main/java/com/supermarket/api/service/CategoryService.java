@@ -3,13 +3,16 @@ package com.supermarket.api.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.supermarket.api.dao.CategoryDAO;
 import com.supermarket.api.entity.Category;
+import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.UpdateCategoryForm;
 import com.supermarket.api.service.GlobalService.Constant;
 
+@Service
 public class CategoryService {
 	@Autowired
 	CategoryDAO categoryDAO;
@@ -26,7 +29,7 @@ public class CategoryService {
 		Category categoryNew = categoryDAO.findFirstByName(name);
 
 		if (categoryNew != null) {
-			return "Category Exists";
+			throw new DuplicateException("There is one Category exsists with name = " + name);
 		}
 
 		categoryNew = new Category();
