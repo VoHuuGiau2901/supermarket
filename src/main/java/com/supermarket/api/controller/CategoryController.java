@@ -39,13 +39,6 @@ public class CategoryController {
 		return categoryService.findCategory(id);
 	}
 
-	@PutMapping("/update")
-	public String update(@RequestBody UpdateCategoryForm updateCategoryForm) {
-		return categoryService.UpdateCategory(updateCategoryForm);
-	}
 
-	@DeleteMapping("/delete/{id}")
-	public String delete(@PathVariable("id") Long id) {
-		return categoryService.deleteCategory(id);
-	}
+	
 }
