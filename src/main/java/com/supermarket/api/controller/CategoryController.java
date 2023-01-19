@@ -26,6 +26,7 @@ public class CategoryController {
 
 	@PostMapping("/create")
 	public String create(@RequestBody CreateCategoryForm createCategoryForm) {
+		System.out.println(createCategoryForm.toString());
 		return categoryService.CreateCategory(createCategoryForm.getName());
 	}
 

@@ -19,8 +19,8 @@ import com.supermarket.api.service.GlobalService.Constant;
 public class Role {
 	@Id
 	@Column(name = "role_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Role_roleId_sequence")
-	@SequenceGenerator(name = "Role_roleId_sequence", sequenceName = "Role_roleId_sequence", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roleId_sequence")
+	@SequenceGenerator(name = "roleId_sequence", sequenceName = "roleId_sequence", allocationSize = 1, initialValue = 1)
 	private Long id;
 
 	@Column(name = "name")
@@ -29,6 +29,11 @@ public class Role {
 	@OneToMany(mappedBy = "role")
 	@JsonIgnoreProperties({ "role" })
 	private List<User> users;
+
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", name=" + name + "]";
+	}
 
 	public Long getId() {
 		return id;

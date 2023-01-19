@@ -3,6 +3,8 @@ package com.supermarket.api.service.GlobalService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.auth0.jwt.algorithms.Algorithm;
+
 public class Constant {
 	public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -19,4 +21,10 @@ public class Constant {
 	public static final String TABLE_PREFIX = "superMarket";
 
 	public static final String SERVER_PUBLIC_FOLDER_LINK = "http://localhost:5000/public/";
+
+	public static final String USER_ROLE = "USER";
+	public static final String ADMIN_ROLE = "ADMIN";
+
+	public static final Algorithm ENCODE_ALGORITHM = Algorithm.HMAC256("sUpER_MaRKet".getBytes());
+	public static final Date ACCESS_TIME_EXPIRED = new Date(System.currentTimeMillis() + 30 * 1000 * 60);
 }

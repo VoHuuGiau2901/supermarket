@@ -18,11 +18,12 @@ import com.supermarket.api.service.GlobalService.Constant;
 
 @Entity
 @Table(name = Constant.TABLE_PREFIX + "category")
+@JsonIgnoreProperties({ "products" })
 public class Category extends EntityBase {
 	@Id
 	@Column(name = "category_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Category_categoryId_sequence")
-	@SequenceGenerator(name = "Category_categoryId_sequence", sequenceName = "Category_categoryId_sequence", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categoryId_sequence")
+	@SequenceGenerator(name = "categoryId_sequence", sequenceName = "categoryId_sequence", allocationSize = 1, initialValue = 1)
 	private Long id;
 
 	@Column(name = "name")

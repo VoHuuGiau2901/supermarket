@@ -21,8 +21,8 @@ import com.supermarket.api.service.GlobalService.Constant;
 public class Product extends EntityBase {
 	@Id
 	@Column(name = "product_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Product_productId_sequence")
-	@SequenceGenerator(name = "Product_productId_sequence", sequenceName = "Product_productId_sequence", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "productId_sequence")
+	@SequenceGenerator(name = "productId_sequence", sequenceName = "productId_sequence", allocationSize = 1, initialValue = 1)
 	private Long id;
 
 	@Column(name = "name")

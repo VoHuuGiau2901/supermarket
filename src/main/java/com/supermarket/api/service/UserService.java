@@ -1,9 +1,15 @@
 package com.supermarket.api.service;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +21,8 @@ import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.SignUpForm;
+import com.supermarket.api.security.MyAuthentication;
+import com.supermarket.api.security.SecurityUtils;
 import com.supermarket.api.service.GlobalService.Constant;
 
 @Service
@@ -28,14 +36,29 @@ public class UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	public String authenticateUser(LoginForm loginForm) {
+	public ResponseEntity<?> authenticateUser(LoginForm loginForm) {
 		User user = userDAO.findByEmail(loginForm.getEmail());
 		if (user == null) {
 			throw new AuthenticateException("Email " + loginForm.getEmail() + " is invalid");
 		}
 		boolean valid = passwordEncoder.matches(loginForm.getPassword(), user.getPassword());
 		if (valid) {
-			return "login success";
+			System.out.println(user);
+
+			String token = SecurityUtils.GenerateJwt(user);
+
+			MyAuthentication myAuthentication = new MyAuthentication(token);
+
+			myAuthentication.setAuthenticated(true);
+
+			SecurityContext securityContext = SecurityContextHolder.getContext();
+			securityContext.setAuthentication(myAuthentication);
+
+			Map<String, String> response = new HashMap<>();
+			response.put("Token", token);
+			response.put("Role",user.getRole().getName());
+			
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			throw new AuthenticateException("password is not match for " + loginForm.getEmail());
 		}

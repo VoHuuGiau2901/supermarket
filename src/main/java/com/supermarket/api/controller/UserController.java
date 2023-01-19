@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import com.supermarket.api.form.SignUpForm;
 import com.supermarket.api.service.UserService;
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public String login(@RequestBody LoginForm loginForm) {
+	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 		return userService.authenticateUser(loginForm);
 	}
 

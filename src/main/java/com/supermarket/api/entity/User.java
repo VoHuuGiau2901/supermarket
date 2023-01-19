@@ -1,6 +1,7 @@
 package com.supermarket.api.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,8 +21,8 @@ import com.supermarket.api.service.GlobalService.Constant;
 public class User extends EntityBase {
 	@Id
 	@Column(name = "user_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "User_userId_sequence")
-	@SequenceGenerator(name = "User_userId_sequence", sequenceName = "User_userId_sequence", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userId_sequence")
+	@SequenceGenerator(name = "userId_sequence", sequenceName = "userId_sequence", allocationSize = 1, initialValue = 1)
 	private Long id;
 
 	@Column(name = "fullname")
@@ -45,8 +47,19 @@ public class User extends EntityBase {
 	@JsonIgnoreProperties({ "users" })
 	private Role role;
 
+	@OneToMany
+	@JsonIgnoreProperties({ "user" })
+	private List<CartItem> cartItems;
+
 	public User() {
 		super();
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", fullname=" + fullname + ", password=" + password + ", address=" + address
+				+ ", dob=" + dob + ", email=" + email + ", phone=" + phone + ", role=" + role + ", cartItems="
+				+ cartItems + "]";
 	}
 
 	public User(Long id, String fullname, String password, String address, Date dob, String email, String phone,
