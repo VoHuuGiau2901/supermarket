@@ -32,7 +32,6 @@ public class CategoryController {
 
 	@GetMapping("/list")
 	public List<Category> getAll() {
-		System.out.println("get all Category called");
 		return categoryService.getAllCategory();
 	}
 
@@ -42,12 +41,12 @@ public class CategoryController {
 	}
 
 	@PutMapping("/update")
-	public String update(@RequestBody UpdateCategoryForm updateCategoryForm) {
+	public ResponseEntity<?> update(@RequestBody UpdateCategoryForm updateCategoryForm) {
 		return categoryService.UpdateCategory(updateCategoryForm);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String delete(@PathVariable("id") Long id) {
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		return categoryService.deleteCategory(id);
 	}
 }

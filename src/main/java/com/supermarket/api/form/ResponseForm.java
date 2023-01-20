@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 
-public class ResponseForm {
+public class ResponseForm<T> {
+	private T data;
+	
 	public Map<String, String> getResponse() {
 		return response;
 	}

@@ -44,10 +44,10 @@ public class CategoryService {
 
 		categoryDAO.save(categoryNew);
 
-		return new ResponseEntity<>(new ResponseForm("Category Created", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm<String>("Category Created", true), HttpStatus.OK);
 	}
 
-	public String UpdateCategory(UpdateCategoryForm updateCategoryForm) {
+	public ResponseEntity<?> UpdateCategory(UpdateCategoryForm updateCategoryForm) {
 		Category categoryUpdate = this.findCategory(updateCategoryForm.getId());
 
 		categoryUpdate.setName(updateCategoryForm.getName());
@@ -57,18 +57,18 @@ public class CategoryService {
 
 		categoryDAO.save(categoryUpdate);
 
-		return "category Updated";
+		return new ResponseEntity<>(new ResponseForm<String>("Category Updated", true), HttpStatus.OK);
 	}
 
 	public List<Category> getAllCategory() {
 		return categoryDAO.findAll();
 	}
 
-	public String deleteCategory(Long id) {
+	public ResponseEntity<?> deleteCategory(Long id) {
 		Category categoryDelete = this.findCategory(id);
 
 		categoryDAO.deleteById(categoryDelete.getId());
 
-		return "category deleted";
+		return new ResponseEntity<>(new ResponseForm<String>("Category Deleted", true), HttpStatus.OK);
 	}
 }

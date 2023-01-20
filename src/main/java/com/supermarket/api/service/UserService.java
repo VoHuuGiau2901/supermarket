@@ -36,6 +36,9 @@ public class UserService {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	SecurityUtils securityUtils;
 
 	public ResponseEntity<?> authenticateUser(LoginForm loginForm) {
 		User user = userDAO.findByEmail(loginForm.getEmail());
@@ -46,7 +49,7 @@ public class UserService {
 		if (valid) {
 			System.out.println(user);
 
-			String token = SecurityUtils.GenerateJwt(user);
+			String token = securityUtils.GenerateJwt(user);
 
 			MyAuthentication myAuthentication = new MyAuthentication(token);
 

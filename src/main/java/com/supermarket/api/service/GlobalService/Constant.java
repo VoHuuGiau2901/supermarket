@@ -10,7 +10,7 @@ public class Constant {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
-	public static final Date getCurrentDateTime() {
+	public static Date getCurrentDateTime() {
 		return new Date();
 	}
 
@@ -25,6 +25,6 @@ public class Constant {
 	public static final String USER_ROLE = "USER";
 	public static final String ADMIN_ROLE = "ADMIN";
 
-	public static final Algorithm ENCODE_ALGORITHM = Algorithm.HMAC256("sUpER_MaRKet".getBytes());
-	public static final Date ACCESS_TIME_EXPIRED = new Date(System.currentTimeMillis() + 30 * 1000 * 60);
+	public static Algorithm ENCODE_ALGORITHM = Algorithm.HMAC256("sUpER_MaRKet".getBytes());
+	public static Integer ACCESS_TIME_EXPIRED = 30 * 1000 * 60;
 }
