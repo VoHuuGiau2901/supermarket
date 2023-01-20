@@ -3,12 +3,15 @@ package com.supermarket.api.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.supermarket.api.dao.CategoryDAO;
 import com.supermarket.api.entity.Category;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
+import com.supermarket.api.form.ResponseForm;
 import com.supermarket.api.form.UpdateCategoryForm;
 import com.supermarket.api.service.GlobalService.Constant;
 
@@ -25,7 +28,7 @@ public class CategoryService {
 		return category;
 	}
 
-	public String CreateCategory(String name) {
+	public ResponseEntity<?> CreateCategory(String name) {
 		Category categoryNew = categoryDAO.findFirstByName(name);
 
 		if (categoryNew != null) {
@@ -41,7 +44,7 @@ public class CategoryService {
 
 		categoryDAO.save(categoryNew);
 
-		return "category created";
+		return new ResponseEntity<>(new ResponseForm("Category Created", true), HttpStatus.OK);
 	}
 
 	public String UpdateCategory(UpdateCategoryForm updateCategoryForm) {

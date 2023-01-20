@@ -20,6 +20,7 @@ import com.supermarket.api.entity.User;
 import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.form.LoginForm;
+import com.supermarket.api.form.ResponseForm;
 import com.supermarket.api.form.SignUpForm;
 import com.supermarket.api.security.MyAuthentication;
 import com.supermarket.api.security.SecurityUtils;
@@ -56,8 +57,8 @@ public class UserService {
 
 			Map<String, String> response = new HashMap<>();
 			response.put("Token", token);
-			response.put("Role",user.getRole().getName());
-			
+			response.put("Role", user.getRole().getName());
+
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			throw new AuthenticateException("password is not match for " + loginForm.getEmail());
@@ -77,7 +78,7 @@ public class UserService {
 		return true;
 	}
 
-	public String createUser(SignUpForm signUpForm) throws ParseException {
+	public ResponseEntity<?> createUser(SignUpForm signUpForm) throws ParseException {
 		this.checkDuplicate(signUpForm);
 
 		User regUser = new User();
@@ -99,7 +100,7 @@ public class UserService {
 
 		userDAO.save(regUser);
 
-		return "signUp successfully";
+		return new ResponseEntity<>(new ResponseForm("Account Created", true), HttpStatus.OK);
 	}
 
 	public List<User> getAllUser() {

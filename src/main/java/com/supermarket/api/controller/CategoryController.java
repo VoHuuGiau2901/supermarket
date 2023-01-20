@@ -3,6 +3,7 @@ package com.supermarket.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,13 +26,13 @@ public class CategoryController {
 	CategoryService categoryService;
 
 	@PostMapping("/create")
-	public String create(@RequestBody CreateCategoryForm createCategoryForm) {
-		System.out.println(createCategoryForm.toString());
+	public ResponseEntity<?> create(@RequestBody CreateCategoryForm createCategoryForm) {
 		return categoryService.CreateCategory(createCategoryForm.getName());
 	}
 
 	@GetMapping("/list")
 	public List<Category> getAll() {
+		System.out.println("get all Category called");
 		return categoryService.getAllCategory();
 	}
 

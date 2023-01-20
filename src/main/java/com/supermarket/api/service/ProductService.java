@@ -3,6 +3,8 @@ package com.supermarket.api.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +12,7 @@ import com.supermarket.api.dao.ProductDAO;
 import com.supermarket.api.entity.Category;
 import com.supermarket.api.entity.Product;
 import com.supermarket.api.exception.NotFoundException;
+import com.supermarket.api.form.ResponseForm;
 import com.supermarket.api.service.GlobalService.Constant;
 import com.supermarket.api.service.GlobalService.StorageService;
 
@@ -22,7 +25,7 @@ public class ProductService {
 	@Autowired
 	StorageService storageService;
 
-	public String CreateProduct(String proName, String imgUrl, Long price, Integer quantity, Category category) {
+	public ResponseEntity<?> CreateProduct(String proName, String imgUrl, Long price, Integer quantity, Category category) {
 		Product productNew = new Product();
 
 		productNew.setName(proName);
@@ -38,10 +41,10 @@ public class ProductService {
 
 		productDAO.save(productNew);
 
-		return "product created";
+		return new ResponseEntity<>(new ResponseForm("Product Created", true), HttpStatus.OK);
 	}
 
-	public String UpdateProduct(Product productUpdate, String proName, Long price, Integer quantity, Integer status) {
+	public ResponseEntity<?> UpdateProduct(Product productUpdate, String proName, Long price, Integer quantity, Integer status) {
 		productUpdate.setName(proName);
 		productUpdate.setPrice(price);
 		productUpdate.setQuantity(quantity);
@@ -51,7 +54,7 @@ public class ProductService {
 
 		productDAO.save(productUpdate);
 
-		return "product updated";
+		return new ResponseEntity<>(new ResponseForm("Product Updated", true), HttpStatus.OK);
 	}
 
 	public String UploadImgProduct(MultipartFile file, String proName) {
@@ -78,12 +81,12 @@ public class ProductService {
 		return productDAO.findByCategoryId(categoryId);
 	}
 
-	public String deleteProductById(Long id) {
+	public ResponseEntity<?> deleteProductById(Long id) {
 		Product productDelete = this.findProduct(id);
 
 		storageService.deleteImage(productDelete.getImg());
 		productDAO.deleteById(productDelete.getId());
 
-		return "product deleted";
+		return new ResponseEntity<>(new ResponseForm("Product Deleted", true), HttpStatus.OK);
 	}
 }

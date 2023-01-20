@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +33,8 @@ public class ProductController {
 	CategoryService categoryService;
 
 	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String create(@RequestParam String proName, @RequestParam MultipartFile file, @RequestParam Long price,
-			@RequestParam Integer quantity, @RequestParam Long categoryId) throws Exception {
+	public ResponseEntity<?> create(@RequestParam String proName, @RequestParam MultipartFile file,
+			@RequestParam Long price, @RequestParam Integer quantity, @RequestParam Long categoryId) throws Exception {
 
 		// upload image to server
 		String imgUrlString = productService.UploadImgProduct(file, proName);
@@ -60,14 +61,10 @@ public class ProductController {
 	}
 
 	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String update(
-			@Nullable @RequestParam String proName,
-			@Nullable @RequestParam MultipartFile file,
-			@Nullable @RequestParam Long price,
-			@Nullable @RequestParam Integer quantity,
-			@Nullable @RequestParam Long categoryId, 
-			@Nullable @RequestParam Integer status,
-			@RequestParam Long proId) throws IOException {
+	public ResponseEntity<?> update(@Nullable @RequestParam String proName, @Nullable @RequestParam MultipartFile file,
+			@Nullable @RequestParam Long price, @Nullable @RequestParam Integer quantity,
+			@Nullable @RequestParam Long categoryId, @Nullable @RequestParam Integer status, @RequestParam Long proId)
+			throws IOException {
 
 		Product productUpdate = productService.findProduct(proId);
 
@@ -86,7 +83,7 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String delete(@PathVariable(value = "proId") Long id) {
+	public ResponseEntity<?> delete(@PathVariable(value = "proId") Long id) {
 		return productService.deleteProductById(id);
 	}
 }

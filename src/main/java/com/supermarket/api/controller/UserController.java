@@ -33,7 +33,7 @@ public class UserController {
 	}
 
 	@PostMapping("/signUp")
-	public String add(@RequestBody SignUpForm signUpForm) throws ParseException {
+	public ResponseEntity<?> add(@RequestBody SignUpForm signUpForm) throws ParseException {
 		return userService.createUser(signUpForm);
 	}
 }
