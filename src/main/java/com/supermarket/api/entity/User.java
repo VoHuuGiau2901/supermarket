@@ -3,6 +3,7 @@ package com.supermarket.api.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class User extends EntityBase {
 	@JsonIgnoreProperties({ "users" })
 	private Role role;
 
-	@OneToMany
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties({ "user" })
 	private List<CartItem> cartItems;
 

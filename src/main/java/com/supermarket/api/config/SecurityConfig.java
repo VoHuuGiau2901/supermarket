@@ -20,13 +20,14 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().cors();
+		http.cors().and().csrf().disable();
 
 		// apis that need Admin Role to call
 		http.authorizeHttpRequests().antMatchers("/product/create", "/product/update", "/product/delete",
 				"/category/create", "/category/update", "/category/delete").hasAnyAuthority(Constant.ADMIN_ROLE);
 
-//		http.authorizeHttpRequests().antMatchers("/user/**").hasAnyAuthority(Constant.USER_ROLE);
+		http.authorizeHttpRequests().antMatchers("/cart/**")
+				.hasAnyAuthority(Constant.USER_ROLE,Constant.ADMIN_ROLE);
 
 		http.addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
 
