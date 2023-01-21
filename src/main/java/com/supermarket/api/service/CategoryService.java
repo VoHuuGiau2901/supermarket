@@ -44,7 +44,7 @@ public class CategoryService {
 
 		categoryDAO.save(categoryNew);
 
-		return new ResponseEntity<>(new ResponseForm<String>("Category Created", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm("Category Created", true), HttpStatus.OK);
 	}
 
 	public ResponseEntity<?> UpdateCategory(UpdateCategoryForm updateCategoryForm) {
@@ -57,7 +57,7 @@ public class CategoryService {
 
 		categoryDAO.save(categoryUpdate);
 
-		return new ResponseEntity<>(new ResponseForm<String>("Category Updated", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm("Category Updated", true), HttpStatus.OK);
 	}
 
 	public List<Category> getAllCategory() {
@@ -69,6 +69,6 @@ public class CategoryService {
 
 		categoryDAO.deleteById(categoryDelete.getId());
 
-		return new ResponseEntity<>(new ResponseForm<String>("Category Deleted", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm("Category Deleted", true), HttpStatus.OK);
 	}
 }

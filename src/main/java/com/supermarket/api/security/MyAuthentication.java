@@ -53,7 +53,8 @@ public class MyAuthentication implements Authentication {
 	@Override
 	public Object getCredentials() {
 		try {
-			return SecurityUtils.decodedJWT(JWT).getIssuer();
+			String issuer = SecurityUtils.decodedJWT(JWT).getIssuer();
+			return Long.parseLong(issuer);
 		} catch (Exception e) {
 			return "";
 		}

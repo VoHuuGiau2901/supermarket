@@ -19,6 +19,7 @@ import com.supermarket.api.entity.Role;
 import com.supermarket.api.entity.User;
 import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
+import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.ResponseForm;
 import com.supermarket.api.form.SignUpForm;
@@ -36,7 +37,7 @@ public class UserService {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	SecurityUtils securityUtils;
 
@@ -108,6 +109,14 @@ public class UserService {
 
 	public List<User> getAllUser() {
 		return userDAO.findAll();
+	}
+
+	public User getUserById(Long id) {
+		User user = userDAO.findById(id).orElse(null);
+		if (user == null) {
+			throw new NotFoundException("no user with id = " + id);
+		}
+		return user;
 	}
 
 }

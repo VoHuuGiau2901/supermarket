@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.supermarket.api.entity.Category;
 import com.supermarket.api.entity.Product;
+import com.supermarket.api.form.ResponseForm;
 import com.supermarket.api.service.CategoryService;
 import com.supermarket.api.service.ProductService;
 
@@ -46,18 +48,42 @@ public class ProductController {
 	}
 
 	@GetMapping("/list")
-	public List<Product> getAll() {
-		return productService.findAll();
+	public ResponseEntity<?> getAll() {
+		List<Product> products = productService.findAll();
+
+		ResponseForm<List<Product>> responseForm = new ResponseForm<>();
+		responseForm.setData(products);
+		responseForm.setMessage("get Products successfully");
+		responseForm.setResult(true);
+
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
 	}
 
 	@GetMapping("/byId/{id}")
-	public Product get(@PathVariable(value = "id") Long id) {
-		return productService.findProduct(id);
+	public ResponseEntity<?> get(@PathVariable(value = "id") Long id) {
+
+		Product product = productService.findProduct(id);
+
+		ResponseForm<Product> responseForm = new ResponseForm<>();
+		responseForm.setData(product);
+		responseForm.setMessage("get Product info successfully");
+		responseForm.setResult(true);
+
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
 	}
 
 	@GetMapping("/bycatId/{id}")
-	public List<Product> getAllByCatId(@PathVariable(value = "id") Long id) {
-		return productService.findProductByCategoryId(id);
+	public ResponseEntity<?> getAllByCatId(@PathVariable(value = "id") Long id) {
+		
+		List<Product> products = productService.findProductByCategoryId(id);
+
+		ResponseForm<List<Product>> responseForm = new ResponseForm<>();
+
+		responseForm.setData(products);
+		responseForm.setMessage("get Product info successfully");
+		responseForm.setResult(true);
+
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
