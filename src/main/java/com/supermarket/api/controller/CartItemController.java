@@ -38,9 +38,9 @@ public class CartItemController extends BaseController {
 	@Autowired
 	UserService userService;
 
-	@GetMapping("/byUser/{id}")
-	ResponseEntity<?> getCartItemByUserId(@PathVariable("id") Long id) {
-		List<CartItem> cartItems = cartItemService.findAllByUserId(id);
+	@GetMapping("/byUser")
+	ResponseEntity<?> getCartItemByUserId() {
+		List<CartItem> cartItems = cartItemService.findAllByUserId(getCurrentUserId());
 		ResponseForm<List<CartItem>> responseForm = new ResponseForm<>();
 		responseForm.setData(cartItems);
 		responseForm.setMessage("get cart items successfully");
