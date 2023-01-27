@@ -43,6 +43,9 @@ public class User extends EntityBase {
 
 	@Column(name = "phone")
 	private String phone;
+	
+	@Column(name = "code")
+	private String code;
 
 	@ManyToOne
 	@JsonIgnoreProperties({ "users" })
@@ -137,5 +140,21 @@ public class User extends EntityBase {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
 	}
 }

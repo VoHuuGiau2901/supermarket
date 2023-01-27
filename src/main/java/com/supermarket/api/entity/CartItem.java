@@ -36,7 +36,7 @@ public class CartItem {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-//	@JsonIgnoreProperties({ "cartItems" })
+	@JsonIgnoreProperties({ "cartItems" })
 	@JsonIgnore
 	private User user;
 

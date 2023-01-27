@@ -85,6 +85,8 @@ public class UserService {
 	public ResponseEntity<?> createUser(SignUpForm signUpForm) throws ParseException {
 		this.checkDuplicate(signUpForm);
 
+		System.out.println(signUpForm);
+
 		User regUser = new User();
 
 		Role roleUser = roleDAO.findFirstByName("USER");
@@ -104,11 +106,11 @@ public class UserService {
 
 		userDAO.save(regUser);
 
-		return new ResponseEntity<>(new ResponseForm("Account Created", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm<>("Account Created", true), HttpStatus.OK);
 	}
 
 	public List<User> getAllUser() {
-		return userDAO.findAll();
+		return userDAO.findAllByRoleName(Constant.USER_ROLE);
 	}
 
 	public User getUserById(Long id) {
@@ -117,6 +119,20 @@ public class UserService {
 			throw new NotFoundException("no user with id = " + id);
 		}
 		return user;
+	}
+
+	public ResponseEntity<?> resetPassword(Long id) {
+		User user = this.getUserById(id);
+
+		String defaultPass = "123456";
+
+		String encryp = passwordEncoder.encode(defaultPass);
+
+		user.setPassword(encryp);
+		
+		userDAO.save(user);
+
+		return new ResponseEntity<>(new ResponseForm<>("reset password success", true), HttpStatus.OK);
 	}
 
 }
