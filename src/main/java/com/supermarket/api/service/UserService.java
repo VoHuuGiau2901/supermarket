@@ -22,10 +22,12 @@ import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.ResponseForm;
+import com.supermarket.api.form.RetypePasswordForm;
 import com.supermarket.api.form.SignUpForm;
 import com.supermarket.api.security.MyAuthentication;
 import com.supermarket.api.security.SecurityUtils;
 import com.supermarket.api.service.GlobalService.Constant;
+import com.supermarket.api.service.GlobalService.EmailService;
 
 @Service
 public class UserService {
@@ -41,15 +43,13 @@ public class UserService {
 	@Autowired
 	SecurityUtils securityUtils;
 
+	@Autowired
+	EmailService emailService;
+
 	public ResponseEntity<?> authenticateUser(LoginForm loginForm) {
-		User user = userDAO.findByEmail(loginForm.getEmail());
-		if (user == null) {
-			throw new AuthenticateException("Email " + loginForm.getEmail() + " is invalid");
-		}
+		User user = this.getUserByEmail(loginForm.getEmail());
 		boolean valid = passwordEncoder.matches(loginForm.getPassword(), user.getPassword());
 		if (valid) {
-			System.out.println(user);
-
 			String token = securityUtils.GenerateJwt(user);
 
 			MyAuthentication myAuthentication = new MyAuthentication(token);
@@ -121,6 +121,14 @@ public class UserService {
 		return user;
 	}
 
+	public User getUserByEmail(String email) {
+		User user = userDAO.findByEmail(email);
+		if (user == null) {
+			throw new AuthenticateException("Email " + email + " is invalid");
+		}
+		return user;
+	}
+
 	public ResponseEntity<?> resetPassword(Long id) {
 		User user = this.getUserById(id);
 
@@ -129,10 +137,41 @@ public class UserService {
 		String encryp = passwordEncoder.encode(defaultPass);
 
 		user.setPassword(encryp);
-		
+
 		userDAO.save(user);
 
 		return new ResponseEntity<>(new ResponseForm<>("reset password success", true), HttpStatus.OK);
 	}
 
+	public ResponseEntity<?> anaylyzeForgetPassword(String email) {
+		User user = this.getUserByEmail(email);
+
+		String code = emailService.getOTP();
+
+		user.setCode(code);
+
+		userDAO.save(user);
+
+		emailService.sendEmail(user);
+
+		return new ResponseEntity<>(new ResponseForm<>("check your email", true), HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> anaylyzeRetypePassword(RetypePasswordForm retypePasswordForm) {
+		System.out.println(retypePasswordForm);
+
+		User user = this.getUserByEmail(retypePasswordForm.getEmail());
+
+		if (!retypePasswordForm.getCode().equalsIgnoreCase(user.getCode())) {
+			throw new AuthenticateException("invalid code");
+		}
+
+		user.setCode(null);
+
+		user.setPassword(passwordEncoder.encode(retypePasswordForm.getPassword()));
+
+		userDAO.save(user);
+
+		return new ResponseEntity<>(new ResponseForm<>("change password successfully", true), HttpStatus.OK);
+	}
 }

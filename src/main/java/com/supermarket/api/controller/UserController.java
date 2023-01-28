@@ -18,6 +18,7 @@ import com.supermarket.api.entity.Product;
 import com.supermarket.api.entity.User;
 import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.ResponseForm;
+import com.supermarket.api.form.RetypePasswordForm;
 import com.supermarket.api.form.SignUpForm;
 import com.supermarket.api.service.UserService;
 
@@ -46,8 +47,13 @@ public class UserController {
 	}
 
 	@PostMapping("/forget-password")
-	public void resetPassword(@RequestBody String email) {
-		System.out.println(email);
+	public ResponseEntity<?> forgetPassword(@RequestBody String email) {
+		return userService.anaylyzeForgetPassword(email);
+	}
+
+	@PostMapping("/retype-password")
+	public ResponseEntity<?> retypePassword(@RequestBody RetypePasswordForm retypePasswordForm) {
+		return userService.anaylyzeRetypePassword(retypePasswordForm);
 	}
 
 	@PostMapping("/login")
