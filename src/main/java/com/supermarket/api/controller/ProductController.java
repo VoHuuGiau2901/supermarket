@@ -74,8 +74,22 @@ public class ProductController {
 
 	@GetMapping("/bycatId/{id}")
 	public ResponseEntity<?> getAllByCatId(@PathVariable(value = "id") Long id) {
-		
+
 		List<Product> products = productService.findProductByCategoryId(id);
+
+		ResponseForm<List<Product>> responseForm = new ResponseForm<>();
+
+		responseForm.setData(products);
+		responseForm.setMessage("get Product info successfully");
+		responseForm.setResult(true);
+
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
+	}
+
+	@GetMapping("/byName")
+	public ResponseEntity<?> getAllByName(@RequestParam(value = "name") String name) {
+
+		List<Product> products = productService.findProductByName(name);
 
 		ResponseForm<List<Product>> responseForm = new ResponseForm<>();
 

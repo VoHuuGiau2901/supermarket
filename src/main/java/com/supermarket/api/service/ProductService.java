@@ -25,7 +25,8 @@ public class ProductService {
 	@Autowired
 	StorageService storageService;
 
-	public ResponseEntity<?> CreateProduct(String proName, String imgUrl, Long price, Integer quantity, Category category) {
+	public ResponseEntity<?> CreateProduct(String proName, String imgUrl, Long price, Integer quantity,
+			Category category) {
 		Product productNew = new Product();
 
 		productNew.setName(proName);
@@ -41,10 +42,11 @@ public class ProductService {
 
 		productDAO.save(productNew);
 
-		return new ResponseEntity<>(new ResponseForm("Product Created", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm<>("Product Created", true), HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> UpdateProduct(Product productUpdate, String proName, Long price, Integer quantity, Integer status) {
+	public ResponseEntity<?> UpdateProduct(Product productUpdate, String proName, Long price, Integer quantity,
+			Integer status) {
 		productUpdate.setName(proName);
 		productUpdate.setPrice(price);
 		productUpdate.setQuantity(quantity);
@@ -54,7 +56,7 @@ public class ProductService {
 
 		productDAO.save(productUpdate);
 
-		return new ResponseEntity<>(new ResponseForm("Product Updated", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm<>("Product Updated", true), HttpStatus.OK);
 	}
 
 	public String UploadImgProduct(MultipartFile file, String proName) {
@@ -78,7 +80,11 @@ public class ProductService {
 	}
 
 	public List<Product> findProductByCategoryId(Long categoryId) {
-		return productDAO.findByCategoryId(categoryId);
+		return productDAO.findAllByCategoryId(categoryId);
+	}
+
+	public List<Product> findProductByName(String name) {
+		return productDAO.findAllByNameLikeIgnoreCase(name);
 	}
 
 	public ResponseEntity<?> deleteProductById(Long id) {
@@ -87,6 +93,6 @@ public class ProductService {
 		storageService.deleteImage(productDelete.getImg());
 		productDAO.deleteById(productDelete.getId());
 
-		return new ResponseEntity<>(new ResponseForm("Product Deleted", true), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseForm<>("Product Deleted", true), HttpStatus.OK);
 	}
 }
