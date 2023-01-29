@@ -11,15 +11,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.supermarket.api.entity.User;
-import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.ResponseForm;
-import com.supermarket.api.form.RetypePasswordForm;
-import com.supermarket.api.form.SignUpForm;
+import com.supermarket.api.form.user.LoginForm;
+import com.supermarket.api.form.user.RetypePasswordForm;
+import com.supermarket.api.form.user.SignUpForm;
+import com.supermarket.api.form.user.UpdatePasswordForm;
+import com.supermarket.api.form.user.UpdateUserForm;
 import com.supermarket.api.service.UserService;
 
 @RestController
@@ -59,6 +62,27 @@ public class UserController extends BaseController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 		return userService.authenticateUser(loginForm);
+	}
+
+	@GetMapping("/profile")
+	public ResponseEntity<?> profile() {
+		User user = userService.getUserById(getCurrentUserId());
+		ResponseForm<User> responseForm = new ResponseForm<>();
+		responseForm.setData(user);
+		responseForm.setMessage("get profile successfully");
+		responseForm.setResult(true);
+
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
+	}
+
+	@PutMapping("/update")
+	public ResponseEntity<?> update(@RequestBody UpdateUserForm updateUserForm) throws ParseException {
+		return userService.updateUser(updateUserForm);
+	}
+
+	@PutMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestBody UpdatePasswordForm updatePasswordForm) {
+		return userService.changePassword(updatePasswordForm.getOldPassword(), updatePasswordForm.getNewPassword());
 	}
 
 	@GetMapping("/logout")

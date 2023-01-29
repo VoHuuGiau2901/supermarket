@@ -12,7 +12,7 @@ import com.supermarket.api.entity.Category;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
 import com.supermarket.api.form.ResponseForm;
-import com.supermarket.api.form.UpdateCategoryForm;
+import com.supermarket.api.form.Category.UpdateCategoryForm;
 import com.supermarket.api.service.GlobalService.Constant;
 
 @Service

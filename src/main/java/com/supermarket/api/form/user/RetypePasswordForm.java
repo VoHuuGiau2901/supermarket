@@ -1,4 +1,4 @@
-package com.supermarket.api.form;
+package com.supermarket.api.form.user;
 
 public class RetypePasswordForm {
 	private String code;

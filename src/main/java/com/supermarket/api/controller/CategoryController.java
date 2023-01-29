@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.supermarket.api.entity.Category;
-import com.supermarket.api.form.CreateCategoryForm;
 import com.supermarket.api.form.ResponseForm;
-import com.supermarket.api.form.UpdateCategoryForm;
+import com.supermarket.api.form.Category.CreateCategoryForm;
+import com.supermarket.api.form.Category.UpdateCategoryForm;
 import com.supermarket.api.service.CategoryService;
 
 @RestController

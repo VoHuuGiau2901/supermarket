@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.supermarket.api.controller.BaseController;
 import com.supermarket.api.dao.RoleDAO;
 import com.supermarket.api.dao.UserDAO;
 import com.supermarket.api.entity.Role;
@@ -20,17 +21,18 @@ import com.supermarket.api.entity.User;
 import com.supermarket.api.exception.AuthenticateException;
 import com.supermarket.api.exception.DuplicateException;
 import com.supermarket.api.exception.NotFoundException;
-import com.supermarket.api.form.LoginForm;
 import com.supermarket.api.form.ResponseForm;
-import com.supermarket.api.form.RetypePasswordForm;
-import com.supermarket.api.form.SignUpForm;
+import com.supermarket.api.form.user.LoginForm;
+import com.supermarket.api.form.user.RetypePasswordForm;
+import com.supermarket.api.form.user.SignUpForm;
+import com.supermarket.api.form.user.UpdateUserForm;
 import com.supermarket.api.security.MyAuthentication;
 import com.supermarket.api.security.SecurityUtils;
 import com.supermarket.api.service.GlobalService.Constant;
 import com.supermarket.api.service.GlobalService.EmailService;
 
 @Service
-public class UserService {
+public class UserService extends BaseController {
 	@Autowired
 	UserDAO userDAO;
 
@@ -46,9 +48,19 @@ public class UserService {
 	@Autowired
 	EmailService emailService;
 
+	private boolean verify(String raw, String hashed) {
+		return passwordEncoder.matches(raw, hashed);
+	}
+
+	private String generateHash(String raw) {
+		return passwordEncoder.encode(raw);
+	}
+
 	public ResponseEntity<?> authenticateUser(LoginForm loginForm) {
 		User user = this.getUserByEmail(loginForm.getEmail());
-		boolean valid = passwordEncoder.matches(loginForm.getPassword(), user.getPassword());
+
+		boolean valid = verify(loginForm.getPassword(), user.getPassword());
+
 		if (valid) {
 			String token = securityUtils.GenerateJwt(user);
 
@@ -69,23 +81,23 @@ public class UserService {
 		}
 	}
 
-	public Boolean checkDuplicate(SignUpForm signUpForm) {
-		User regUser = userDAO.findByEmailOrPhone(signUpForm.getEmail(), signUpForm.getPhone());
-		if (regUser != null) {
-			if (regUser.getEmail().equalsIgnoreCase(signUpForm.getEmail())) {
-				throw new DuplicateException("Email " + signUpForm.getEmail() + " has been taken");
+	public Boolean checkDuplicate(String phone, String email) {
+		List<User> checkUsers = userDAO.findAllByEmailOrPhone(email, phone);
+
+		for (User user : checkUsers) {
+			if (user.getEmail().equalsIgnoreCase(email) && user.getId() != getCurrentUserId()) {
+				throw new DuplicateException("Email " + email + " has been taken");
 			}
-			if (regUser.getPhone().equalsIgnoreCase(signUpForm.getPhone())) {
-				throw new DuplicateException("Phone " + signUpForm.getPhone() + " has been taken");
+			if (user.getPhone().equalsIgnoreCase(phone) && user.getId() != getCurrentUserId()) {
+				throw new DuplicateException("Phone " + phone + " has been taken");
 			}
 		}
+
 		return true;
 	}
 
 	public ResponseEntity<?> createUser(SignUpForm signUpForm) throws ParseException {
-		this.checkDuplicate(signUpForm);
-
-		System.out.println(signUpForm);
+		this.checkDuplicate(signUpForm.getPhone(), signUpForm.getEmail());
 
 		User regUser = new User();
 
@@ -94,7 +106,7 @@ public class UserService {
 		regUser.setRole(roleUser);
 
 		regUser.setFullname(signUpForm.getFullname());
-		regUser.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+		regUser.setPassword(this.generateHash(signUpForm.getPassword()));
 		regUser.setAddress(signUpForm.getAddress());
 		regUser.setDob(Constant.DATE_FORMAT.parse(signUpForm.getDob()));
 		regUser.setEmail(signUpForm.getEmail());
@@ -107,6 +119,39 @@ public class UserService {
 		userDAO.save(regUser);
 
 		return new ResponseEntity<>(new ResponseForm<>("Account Created", true), HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> updateUser(UpdateUserForm updateUserForm) throws ParseException {
+		this.checkDuplicate(updateUserForm.getPhone(), updateUserForm.getEmail());
+
+		User updateUser = this.getUserById(getCurrentUserId());
+
+		updateUser.setFullname(updateUserForm.getFullname());
+		updateUser.setAddress(updateUserForm.getAddress());
+		updateUser.setDob(Constant.DATE_FORMAT.parse(updateUserForm.getDob()));
+		updateUser.setEmail(updateUserForm.getEmail());
+		updateUser.setPhone(updateUserForm.getPhone());
+
+		updateUser.setModifiedDate(Constant.getCurrentDateTime());
+		updateUser.setStatus(Constant.ACTIVE_STATUS);
+
+		userDAO.save(updateUser);
+
+		return new ResponseEntity<>(new ResponseForm<>("Account Updated", true), HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> changePassword(String oldPassword, String newPassword) {
+		User updatePasswordUser = this.getUserById(getCurrentUserId());
+
+		boolean valid = this.verify(oldPassword, updatePasswordUser.getPassword());
+		if (!valid) {
+			throw new AuthenticateException("old password is not match");
+		}
+		updatePasswordUser.setPassword(this.generateHash(newPassword));
+
+		userDAO.save(updatePasswordUser);
+
+		return new ResponseEntity<>(new ResponseForm<>("Password Updated", true), HttpStatus.OK);
 	}
 
 	public List<User> getAllUser() {
@@ -134,7 +179,7 @@ public class UserService {
 
 		String defaultPass = "123456";
 
-		String encryp = passwordEncoder.encode(defaultPass);
+		String encryp = this.generateHash(defaultPass);
 
 		user.setPassword(encryp);
 
@@ -168,7 +213,7 @@ public class UserService {
 
 		user.setCode(null);
 
-		user.setPassword(passwordEncoder.encode(retypePasswordForm.getPassword()));
+		user.setPassword(this.generateHash(retypePasswordForm.getPassword()));
 
 		userDAO.save(user);
 

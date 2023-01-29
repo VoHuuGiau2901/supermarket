@@ -1,4 +1,4 @@
-package com.supermarket.api.form;
+package com.supermarket.api.form.Category;
 
 public class CreateCategoryForm {
 	private String name;

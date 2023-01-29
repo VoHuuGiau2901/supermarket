@@ -23,12 +23,13 @@ public class SecurityConfig {
 		http.cors().and().csrf().disable();
 
 		// apis that need Admin Role to call
-		http.authorizeHttpRequests()
-				.antMatchers("/user/list", "/user/resetPassword", "/product/create", "/product/update",
-						"/product/delete", "/category/create", "/category/update", "/category/delete")
-				.hasAnyAuthority(Constant.ADMIN_ROLE);
+		http.authorizeHttpRequests().antMatchers("/user/list", "/product/create", "/product/update", "/product/delete",
+				"/category/create", "/category/update", "/category/delete").hasAnyAuthority(Constant.ADMIN_ROLE);
 
-		http.authorizeHttpRequests().antMatchers("/cart/**").hasAnyAuthority(Constant.USER_ROLE, Constant.ADMIN_ROLE);
+		// api that need User or Admin role to call
+		http.authorizeHttpRequests().antMatchers("/user/change-password", "/user/profile", "/user/update",
+				"/user/resetPassword", "/user/logout", "/cart/**")
+				.hasAnyAuthority(Constant.USER_ROLE, Constant.ADMIN_ROLE);
 
 		http.addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
 

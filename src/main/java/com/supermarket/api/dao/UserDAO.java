@@ -11,7 +11,7 @@ import com.supermarket.api.entity.User;
 public interface UserDAO extends JpaRepository<User, Long> {
 	User findByEmail(String email);
 
-	User findByEmailOrPhone(String email, String phone);
+	List<User> findAllByEmailOrPhone(String email, String phone);
 
 	List<User> findAllByRoleName(String roleName);
 }

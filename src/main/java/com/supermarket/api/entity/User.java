@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.supermarket.api.service.GlobalService.Constant;
 
@@ -52,7 +53,8 @@ public class User extends EntityBase {
 	private Role role;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties({ "user" })
+//	@JsonIgnoreProperties({ "user" })
+	@JsonIgnore
 	private List<CartItem> cartItems;
 
 	public User() {
