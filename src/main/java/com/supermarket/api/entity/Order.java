@@ -1,7 +1,5 @@
 package com.supermarket.api.entity;
 
-
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.supermarket.api.service.GlobalService.Constant;
@@ -32,15 +29,22 @@ public class Order extends EntityBase {
 	@Column(name = "total")
 	private String total;
 
-	@Column(name = "user_id")
-	private Long user_id;
-
 	@Column(name = "status")
 	private Integer status;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIgnoreProperties(value = "orders")
-	
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -65,14 +69,6 @@ public class Order extends EntityBase {
 		this.total = total;
 	}
 
-	public Long getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
-	}
-
 	public Integer getStatus() {
 		return status;
 	}
@@ -80,11 +76,5 @@ public class Order extends EntityBase {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
-
-	
-
-
-
 
 }

@@ -31,9 +31,6 @@ public class OrderDetail extends EntityBase {
 	@Column(name = "quantity")
 	private Long quantity;
 
-	@Column(name = "order_id")
-	private Long order_id;
-
 	@Column(name = "product_id")
 	private Long product_id;
 
@@ -42,8 +39,9 @@ public class OrderDetail extends EntityBase {
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
-	@JoinColumn(name = "product_id")
 	@JsonIgnoreProperties(value = "orderdetails")
+	private Order order;
+	
 	public Long getId() {
 		return id;
 	}
@@ -68,12 +66,12 @@ public class OrderDetail extends EntityBase {
 		this.quantity = quantity;
 	}
 
-	public Long getOrder_id() {
-		return order_id;
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setOrder_id(Long order_id) {
-		this.order_id = order_id;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	public Long getProduct_id() {
