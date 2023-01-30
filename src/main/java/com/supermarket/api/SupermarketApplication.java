@@ -57,6 +57,7 @@ public class SupermarketApplication {
 
 			firstAdmin.setEmail("admin@gmail.com");
 			firstAdmin.setFullname("First Admin");
+			firstAdmin.setPhone("0906679963");
 			firstAdmin.setPassword(new BCryptPasswordEncoder().encode("admin123456"));
 
 			firstAdmin.setCreatedDate(Constant.getCurrentDateTime());
