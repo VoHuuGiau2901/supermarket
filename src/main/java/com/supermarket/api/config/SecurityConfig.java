@@ -28,7 +28,7 @@ public class SecurityConfig {
 
 		// api that need User or Admin role to call
 		http.authorizeHttpRequests().antMatchers("/user/change-password", "/user/profile", "/user/update",
-				"/user/resetPassword", "/user/logout", "/cart/**")
+				"/user/resetPassword", "/cart/**")
 				.hasAnyAuthority(Constant.USER_ROLE, Constant.ADMIN_ROLE);
 
 		http.addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
