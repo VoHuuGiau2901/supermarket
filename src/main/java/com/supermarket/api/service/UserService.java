@@ -73,6 +73,7 @@ public class UserService extends BaseController {
 
 			Map<String, String> response = new HashMap<>();
 			response.put("Token", token);
+			response.put("userName", user.getFullname());
 			response.put("Role", user.getRole().getName());
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
