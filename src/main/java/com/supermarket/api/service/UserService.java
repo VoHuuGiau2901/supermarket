@@ -209,7 +209,7 @@ public class UserService extends BaseController {
 		User user = this.getUserByEmail(retypePasswordForm.getEmail());
 
 		if (!retypePasswordForm.getCode().equalsIgnoreCase(user.getCode())) {
-			throw new AuthenticateException("invalid code");
+			throw new AuthenticateException("invalid OTP code");
 		}
 
 		user.setCode(null);

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.supermarket.api.config.ResourceConfig;
 
 public class Constant {
 	public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -21,7 +22,7 @@ public class Constant {
 
 	public static final String TABLE_PREFIX = "superMarket";
 
-	public static final String SERVER_PUBLIC_FOLDER_LINK = "http://localhost:5000/public/";
+	public static final String SERVER_PUBLIC_FOLDER_LINK = "http://localhost:" + ResourceConfig.serverPort + "/public/";
 
 	public static final String USER_ROLE = "USER";
 	public static final String ADMIN_ROLE = "ADMIN";

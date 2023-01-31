@@ -19,8 +19,11 @@ public class ResourceConfig implements WebMvcConfigurer {
 	@Autowired
 	Environment environment;
 
+	public static String serverPort = "";
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		serverPort = environment.getProperty("server.port");
 		String location = "file:///" + Paths.get("./public/").normalize().toAbsolutePath().toString().replace("\\", "/")
 				+ "/";
 		registry.addResourceHandler("/public/**").addResourceLocations(location);
